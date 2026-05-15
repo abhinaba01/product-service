@@ -43,9 +43,23 @@ public class ProductController {
     }
 
     @PostMapping("/register")
-    public Product registerProduct(@RequestBody Product product) {
+    public Product registerProduct(@RequestBody Product product , @RequestHeader("X-User-Id") String userId) {
 
-        return productService.registerProduct(product);
+        return productService.registerProduct(product , userId);
+
+    }
+
+    @DeleteMapping("/{productId}")
+    public  void teProduct(@PathVariable String productId , @RequestHeader("X-User-Id") String sellerId) {
+
+        productService.deleteProduct(productId,sellerId);
+
+    }
+
+    @PutMapping("/{productId}")
+    public  Product updateProduct(@PathVariable String productId , @RequestHeader("X-User-Id") String sellerId , @RequestBody Product product) {
+
+        return productService.updateProduct(productId,sellerId,product);
 
     }
 
