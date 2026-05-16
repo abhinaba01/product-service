@@ -1,8 +1,11 @@
 package com.ecommerce.product_service.service;
 
+import com.ecommerce.product_service.dto.ProductRequestDTO;
+import com.ecommerce.product_service.dto.ProductResponseDTO;
 import com.ecommerce.product_service.entity.Product;
 import com.ecommerce.product_service.exception.ProductDoesNotExistException;
 import com.ecommerce.product_service.exception.UnauthorizedProductAccessException;
+import com.ecommerce.product_service.mapper.ProductMapper;
 import com.ecommerce.product_service.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,17 +16,21 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.productMapper =  productMapper;
 
     }
 
-    public Product registerProduct(Product product , String sellerId) {
+    public ProductResponseDTO registerProduct(ProductRequestDTO request , String sellerId) {
 
+        Product product = productMapper.toEntity(request);
         product.setSellerId(sellerId);
 
-        return productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
+        return productMapper.toDTO(savedProduct);
     }
 
     public List<Product> getAllProducts() {
@@ -63,7 +70,7 @@ public class ProductService {
     public Product updateProduct(String productId , String sellerId, Product newProduct){
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product Not Found"));
+                .orElseThrow(() -> new ProductDoesNotExistException("Product Not Found"));
 
         if (!product.getSellerId().equals(sellerId)){
             throw new UnauthorizedProductAccessException("User does not own this product");
