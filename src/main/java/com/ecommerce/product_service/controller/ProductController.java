@@ -1,6 +1,7 @@
 package com.ecommerce.product_service.controller;
 
 
+import com.ecommerce.product_service.dto.ProductInfoResponseDTO;
 import com.ecommerce.product_service.dto.ProductRequestDTO;
 import com.ecommerce.product_service.dto.ProductResponseDTO;
 import com.ecommerce.product_service.entity.Product;
@@ -64,6 +65,9 @@ public class ProductController {
         return productService.updateProduct(productId,sellerId,product);
 
     }
+
+
+
 
 
 }

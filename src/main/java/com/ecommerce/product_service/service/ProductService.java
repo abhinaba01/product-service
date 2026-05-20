@@ -84,9 +84,28 @@ public class ProductService {
 
         return productRepository.save(product);
 
+    }
+
+    public void reduceStock(String id , Integer quantity){
+
+        if(quantity < 0){
+            throw new IllegalArgumentException("Quantity must be greater than 0");
+        }
+
+        Product product = productRepository.findById(id)
+                        .orElseThrow(() -> new ProductDoesNotExistException("Product Does Not Exist"));
+
+        Integer stockQuantity = product.getStockQuantity();
+
+        if (stockQuantity < quantity){
+          throw new RuntimeException("Insufficient stocks ");
+        }
 
 
+        Integer newQuantity = stockQuantity - quantity;
+        product.setStockQuantity(newQuantity);
 
+        productRepository.save(product);
 
     }
 
