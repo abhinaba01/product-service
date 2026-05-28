@@ -65,9 +65,4 @@ public class ProductController {
         return productService.updateProduct(productId,sellerId,product);
 
     }
-
-
-
-
-
 }

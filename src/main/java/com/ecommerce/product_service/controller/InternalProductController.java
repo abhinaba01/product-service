@@ -19,4 +19,9 @@ public class InternalProductController {
     public void reduceStock (@PathVariable String id, @RequestParam Integer quantity){
         productService.reduceStock(id,quantity);
     }
+
+    @PutMapping("/{id}/increase-stock")
+    public void increaseStock (@PathVariable String id, @RequestParam Integer quantity){
+        productService.increaseStock(id,quantity);
+    }
 }

@@ -81,6 +81,7 @@ public class ProductService {
         product.setDescription(newProduct.getDescription());
         product.setStockQuantity(newProduct.getStockQuantity());
         product.setPrice(newProduct.getPrice());
+        product.setName(newProduct.getName());
 
         return productRepository.save(product);
 
@@ -88,7 +89,7 @@ public class ProductService {
 
     public void reduceStock(String id , Integer quantity){
 
-        if(quantity < 0){
+        if(quantity <= 0){
             throw new IllegalArgumentException("Quantity must be greater than 0");
         }
 
@@ -103,6 +104,25 @@ public class ProductService {
 
 
         Integer newQuantity = stockQuantity - quantity;
+        product.setStockQuantity(newQuantity);
+
+        productRepository.save(product);
+
+    }
+
+
+    public void increaseStock(String id , Integer quantity){
+
+        if(quantity < 0){
+            throw new IllegalArgumentException("Quantity must be greater than 0");
+        }
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductDoesNotExistException("Product Does Not Exist"));
+
+        Integer stockQuantity = product.getStockQuantity();
+
+        Integer newQuantity = stockQuantity + quantity;
         product.setStockQuantity(newQuantity);
 
         productRepository.save(product);
